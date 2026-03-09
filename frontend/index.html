@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart LT Line Monitoring</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+
+<body>
+
+<section class="home">
+  <div class="home-content">
+    <h1>Smart LT Line Monitoring System</h1>
+    <p>AI-Based Fault Prediction & Street Monitoring</p>
+    <button onclick="openLogin()">Officer Sign In</button>
+  </div>
+</section>
+
+<!-- LOGIN -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeLogin()">×</span>
+    <h2>Officer Login</h2>
+
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <div class="login-options">
+      <span class="forgot-link" onclick="openForgot()">Forgot Password?</span>
+    </div>
+
+    <button onclick="login()">Login</button>
+
+    <p>No account? 
+       <span class="switch-link" onclick="switchToSignup()">Sign Up</span>
+    </p>
+  </div>
+</div>
+
+
+<!-- SIGNUP -->
+<div id="signupModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeSignup()">×</span>
+    <h2>Create Account</h2>
+
+    <input id="signup-email" placeholder="Email">
+    <input id="signup-username" placeholder="Username">
+    <input id="signup-password" type="password" placeholder="Password">
+
+    <p>📍 Select Officer Location</p>
+    <div id="map" style="height:300px"></div>
+
+    <input type="hidden" id="signup-lat">
+    <input type="hidden" id="signup-lng">
+
+    <button onclick="signup()">Sign Up</button>
+  </div>
+</div>
+<!-- FORGOT PASSWORD -->
+<div id="forgotModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeForgot()">×</span>
+    <h2>Reset Password</h2>
+
+    <input id="reset-email" placeholder="Enter your registered email">
+
+    <button onclick="sendReset()">Send Reset Link</button>
+
+    <p>
+      <span class="switch-link" onclick="backToLogin()">Back to Login</span>
+    </p>
+  </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

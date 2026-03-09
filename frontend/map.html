@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Map View - LT Monitoring</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+    }
+
+    /* ================= NAVBAR ================= */
+    .navbar {
+      height: 65px;
+      background: #0d1b2a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .menu {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      margin: 0 auto;
+      margin-right: 40%;
+    }
+      
+
+    .menu a {
+      color: white;
+      text-decoration: none;
+      margin-left: 25px;
+      font-size: 14px;
+      position: relative;
+      transition: 0.3s;
+    }
+
+    .menu a:hover {
+      color: #00b4d8;
+    }
+
+    .menu a.active {
+      color: #00b4d8;
+    }
+
+    .menu a.active::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: -6px;
+      left: 0;
+      background: #00b4d8;
+    }
+
+    /* ================= MAP ================= */
+    #map {
+      height: calc(100vh - 65px);
+      width: 100%;
+      margin-top: 65px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="navbar">
+    <div class="logo">⚡ LT Power Monitoring</div>
+
+    <nav class="menu">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/map-page" class="active">Map</a>
+      <a href="/reports">Reports</a>
+      <a href="/profile-page">Profile</a>
+    </nav>
+  </header>
+
+  <!-- ================= MAP ================= -->
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script>
+    const API = "http://127.0.0.1:5000/live-data";
+
+    const map = L.map('map').setView([10.7905, 78.7047], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const statusColors = {
+      "NORMAL": "green",
+      "WARNING": "orange",
+      "FAULT": "red"
+    };
+
+    fetch(API)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(d => {
+          const color = statusColors[d.fault_status] || "gray";
+
+          const marker = L.circleMarker(
+            [d.lat || 10.79, d.lng || 78.70],
+            {
+              radius: 10,
+              color: color,
+              fillColor: color,
+              fillOpacity: 0.8
+            }
+          ).addTo(map);
+
+          marker.bindPopup(`
+            <b>${d.street}</b><br>
+            Line ${d.line_no} (${d.phase})<br>
+            Voltage: ${d.voltage} V<br>
+            Current: ${d.current} A<br>
+            Load: ${d.load_kw} kW<br>
+            Status: <b style="color:${color}">${d.fault_status}</b>
+          `);
+        });
+      });
+  </script>
+
+</body>
+</html>

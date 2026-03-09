@@ -1,0 +1,543 @@
+/* ================= GLOBAL ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #0d1b2a;
+    color: #333;
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+    background: #0d1b2a;
+    color: white;
+    padding: 15px 30px;
+    display: flex;                                 
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.subtitle {
+    display: block;
+    font-size: 12px;
+    color: #ccc;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 15px;
+}
+
+.menu a.active,
+.menu a:hover {
+    color: #00b4d8;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logout-btn {
+    background: #e63946;
+    border: none;
+    padding: 6px 12px;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.logout-btn:hover {
+    background: #c1121f;
+}
+
+/* ================= KPI CARDS ================= */
+.kpi-cards {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.card {
+    flex: 1;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card .title {
+    font-size: 14px;
+}
+
+.card .value {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.blue { background: #0077b6; }
+.red { background: #d00000; }
+.green { background: #2a9d8f; }
+.purple { background: #6a4c93; }
+
+/* ================= TABLE ================= */
+.live-table {
+    padding: 20px;
+    color: white;
+    background-color:#0d1b2a;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    background: #0d1b2a;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #0d1b2a;
+    color: white;
+    border: white solid 1px;
+}
+
+thead {
+    background: #0d1b2a;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    border: white solid 3px;
+    
+}
+
+
+
+tbody tr:hover {
+    background: black;
+}
+
+/* Status Colors */
+.status-normal {
+    color: green;
+    font-weight: bold;
+}
+
+.status-fault {
+    color: red;
+    font-weight: bold;
+}
+
+.status-warning {
+    color: orange;
+    font-weight: bold;
+}
+
+/* AI Action Button */
+.ai-btn {
+    background: #0077b6;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.ai-btn:hover {
+    background: #023e8a;
+}
+
+/* ================= CHARTS ================= */
+.charts {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    height: fit-content;
+}
+
+.chart-box {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    height: fit-content;
+    max-width: 400px;
+}
+
+/* ================= AI INSIGHTS ================= */
+.ai-insights {
+    padding: 20px;
+    color: white;
+}
+
+.ai-cards {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.ai-insights .card {
+    background: #1d3557;
+    color: white;
+    flex: 1;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+#aiPredictions {
+    list-style: none;
+}
+
+/* ================= RECENT AI PREDICTIONS ================= */
+
+/* ================= AI PREDICTIONS ================= */
+
+#aiPredictions {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+#aiPredictions li {
+    background: linear-gradient(135deg, #ffffff, #f1f9ff);
+    padding: 12px 18px;
+    border-left: 5px solid #0077b6;
+    border-radius: 12px;
+    color: #0a1f44;
+    font-weight: 500;
+    box-shadow: 0 6px 20px rgba(0, 119, 182, 0.15);
+    transition: all 0.3s ease;
+    animation: slideFade 0.4s ease forwards;
+    opacity: 0;
+    transform: translateY(10px);
+    width: fit-content;
+    min-width: 240px;
+}
+
+#aiPredictions li:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0, 119, 182, 0.35);
+}
+
+/* Animation */
+@keyframes slideFade {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= ALERT CENTER ================= */
+
+.alert-center {
+    padding: 20px;
+    color: white;
+}
+
+#alertList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+#alertList div {
+    background: linear-gradient(135deg, #fff5f5, #ffe3e3);
+    color: #900;
+    padding: 12px 18px;
+    border-left: 5px solid red;
+    border-radius: 12px;
+    font-weight: 500;
+    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    animation: alertSlide 0.4s ease forwards;
+    opacity: 0;
+    transform: translateY(10px);
+    width: fit-content;
+    min-width: 250px;
+}
+
+#alertList div:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(255, 0, 0, 0.35);
+}
+
+/* Alert animation */
+@keyframes alertSlide {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* ================= MODAL ================= */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 150px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background: white;
+    margin: auto;
+    padding: 20px;
+    width: 40%;
+    border-radius: 10px;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.close {
+    float: right;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width: 1000px) {
+    .kpi-cards,
+    .charts,
+    .ai-cards {
+        flex-direction: column;
+    }
+
+    .modal-content {
+        width: 80%;
+    }
+}
+/* ===== Smooth Row Fade Animation ===== */
+.fade-in {
+    animation: fadeInRow 0.4s ease-in-out;
+}
+
+@keyframes fadeInRow {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Solve Button ===== */
+.solve-btn {
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.solve-btn:hover {
+    transform: scale(1.1);
+}
+
+/* ===== Action Text Column ===== */
+.action-text {
+    font-size: 13px;
+    max-width: 200px;
+}
+
+/* ===== No Action ===== */
+.no-action {
+    color: gray;
+}
+
+/* ===== KPI Hover Smooth ===== */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+/* ================= PROFILE PAGE ================= */
+
+.profile-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    animation: slideUp 0.6s ease forwards;
+    opacity: 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* Title */
+.profile-card h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #0d1b2a;
+    font-weight: 600;
+}
+
+/* Profile Info */
+.profile-card p {
+    margin: 12px 0;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 6px;
+}
+
+.profile-card strong {
+    color: #555;
+}
+
+.profile-card span {
+    color: #0077b6;
+    font-weight: 500;
+}
+
+/* Assigned Streets */
+.profile-card h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #0d1b2a;
+    font-size: 16px;
+}
+
+#profileStreets {
+    list-style: none;
+    padding: 0;
+}
+
+#profileStreets li {
+    background: #f1f9ff;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-left: 4px solid #0077b6;
+    border-radius: 6px;
+    font-size: 14px;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Navbar Active Highlight Animation */
+.menu a.active {
+    position: relative;
+    color: #00b4d8;
+}
+
+.menu a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 100%;
+    height: 2px;
+    background: #00b4d8;
+    animation: underline 0.3s ease-in-out;
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes underline {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 600px) {
+    .profile-card {
+        width: 90% !important;
+        padding: 20px;
+    }
+
+    .profile-card p {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+.profile-section {
+    min-height: 80vh;
+    background: linear-gradient(135deg, #f4f6f9, #e8f3ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.profile-card {
+    width: 400px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    animation: slideUp 0.6s ease forwards;
+    opacity: 0;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

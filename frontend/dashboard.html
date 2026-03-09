@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LT Power Monitoring Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+/* ===== NAV RIGHT SECTION FIX ===== */
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+.username {
+    font-weight: bold;
+    color: white;
+}
+
+/* ===== NOTIFICATION ===== */
+.notification-wrapper {
+    position: relative;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#notifCount {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: 50%;
+}
+
+.notification-panel {
+    position: absolute;
+    right: 0;
+    top: 35px;
+    width: 260px;
+    background: white;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 12px;
+    display: none;
+    z-index: 1000;
+}
+
+.notification-panel h4 {
+    margin-bottom: 10px;
+}
+
+.notification-panel div {
+    background: #ffe5e5;
+    padding: 8px;
+    margin-bottom: 6px;
+    border-left: 4px solid red;
+    border-radius: 5px;
+    font-size: 14px;
+    color: black;
+}
+
+/* ===== CRITICAL POPUP ===== */
+.critical-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #0011d0;
+    color:black;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    z-index: 2000;
+}
+</style>
+
+</head>
+<body>
+
+<!-- ================= TOP NAVBAR ================= -->
+<header class="navbar">
+    <div class="logo">
+        ⚡ LT Power Monitoring
+        <span class="subtitle">Real-time Fault Detection System</span>
+    </div>
+
+    <nav class="menu">
+        <a class="active" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('map_page') }}">Map</a>
+        <a href="{{ url_for('reports') }}">Reports</a>
+        <a href="{{ url_for('profile_page') }}">Profile</a>
+    </nav>
+
+    <!-- ===== RIGHT SECTION ===== -->
+    <div class="user-section">
+
+        <!-- 🔔 Notification -->
+        <div class="notification-wrapper" onclick="toggleNotifications()">
+            🔔
+            <span id="notifCount">0</span>
+
+            <div id="notificationPanel" class="notification-panel">
+                <h4>Notifications</h4>
+                <div id="notificationList">
+                    <div>No active faults</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 👤 Username -->
+        <div class="username">
+            Welcome, <span id="username">User</span>
+        </div>
+
+        <button onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<!-- ================= KPI CARDS ================= -->
+<section class="kpi-cards">
+    <div class="card blue" onclick="filterRows('ALL')">
+        <div class="title">Total Streets Assigned</div>
+        <div class="value" id="totalStreets">0</div>
+    </div>
+    <div class="card red" onclick="filterRows('FAULT')">
+        <div class="title">Critical Alerts</div>
+        <div class="value" id="faultCount">0</div>
+    </div>
+    <div class="card green" onclick="filterRows('NORMAL')">
+        <div class="title">Normal Streets</div>
+        <div class="value" id="normalCount">0</div>
+    </div>
+    <div class="card purple" onclick="filterRows('WARNING')">
+        <div class="title">Warning Alerts</div>
+        <div class="value" id="alertCount">0</div>
+    </div>
+</section>
+
+<!-- ================= LIVE STREET TABLE ================= -->
+<section class="live-table">
+    <h3>Live Street Monitoring</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Street Name</th>
+                <th>Line No</th>
+                <th>Phase</th>
+                <th>Voltage (V)</th>
+                <th>Current (A)</th>
+                <th>Load (kW)</th>
+                <th>Status</th>
+                <th>Confidence</th>
+                <th>Last Updated</th>
+                <th>Solution</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="streetTable"></tbody>
+    </table>
+</section>
+
+<!-- ================= CHARTS ================= -->
+<section class="charts">
+    <div class="chart-box">
+        <h4>Load Distribution</h4>
+        <canvas id="loadChart"></canvas>
+    </div>
+    <div class="chart-box">
+        <h4>Status Distribution</h4>
+        <canvas id="statusChart"></canvas>
+    </div>
+</section>
+
+<!-- ================= AI INSIGHTS ================= -->
+<section class="ai-insights">
+    <h3>AI Insights Overview</h3>
+    <div class="ai-cards">
+        <div class="card">Active Faults: <span id="aiFaults">0</span></div>
+        <div class="card">Confidence: <span id="aiConfidence">Stable</span></div>
+    </div>
+
+    <h4>Recent AI Predictions</h4>
+    <ul id="aiPredictions"></ul>
+</section>
+
+<!-- ================= ALERT CENTER ================= -->
+<section class="alert-center">
+    <h3>Alert Center</h3>
+    <div id="alertList"></div>
+</section>
+
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+
+<script>
+function logout() {
+    localStorage.clear();
+    window.location.href = "/";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LT Power Monitoring - Reports</title>
+
+  <!-- Flask Static CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='report.css') }}">
+  <!-- jsPDF core -->
+<!-- jsPDF core -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<!-- SheetJS for Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+
+
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">
+    ⚡ LT Power Monitoring
+    <span class="subtitle">Fault History & Reports</span>
+  </div>
+
+  <nav class="menu">
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('map_page') }}">Map</a>
+    <a class="active" href="{{ url_for('reports') }}">Reports</a>
+    <a href="/profile-page">Profile</a>
+  </nav>
+
+  <div class="user-section">
+    <div class="notifications">
+      <span id="notifCount">0</span> 🔔
+    </div>
+    <div class="username" id="username"></div>
+    <button onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<!-- ================= Summary Cards ================= -->
+<section class="report-summary">
+  <div class="card blue">
+    Total Incidents<br>
+    <span id="totalIncidents">0</span>
+  </div>
+
+  <div class="card green">
+    Faults Resolved<br>
+    <span id="resolvedFaults">0</span>
+  </div>
+
+  <div class="card purple">
+    Warnings Issued<br>
+    <span id="warningsIssued">0</span>
+  </div>
+
+  <div class="card red">
+    Avg Response Time<br>
+    <span id="avgResponse">0 min</span>
+  </div>
+</section>
+
+<!-- ================= Filters ================= -->
+<section class="report-controls">
+  <label>Start Date:
+    <input type="date" id="startDate">
+  </label>
+
+  <label>End Date:
+    <input type="date" id="endDate">
+  </label>
+
+  <button onclick="applyFilter()">Apply Filter</button>
+  <button onclick="exportPDF()">Export PDF</button>
+  <button onclick="exportExcel()">Export Excel</button>
+</section>
+
+<!-- ================= Table ================= -->
+<section class="report-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Street</th>
+        <th>Incident</th>
+        <th>Severity</th>
+        <th>Status</th>
+        <th>Officer</th>
+      </tr>
+    </thead>
+    <tbody id="incidentTable"></tbody>
+  </table>
+</section>
+
+<!-- Flask Static JS -->
+<script src="{{ url_for('static', filename='report.js') }}"></script>
+<!-- jsPDF for PDF export -->
+
+
+
+<script>
+function logout() {
+    localStorage.clear();
+    window.location.href = "{{ url_for('home') }}";
+}
+</script>
+
+</body>
+</html>

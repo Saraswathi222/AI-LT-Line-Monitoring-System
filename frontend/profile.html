@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>User Profile - LT Power Monitoring</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  background:#0d1b2a;
+  color:white;
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  padding:15px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.menu a{
+  color:white;
+  text-decoration:none;
+  margin:0 15px;
+}
+
+.menu a.active{
+  color:#00b4d8;
+}
+
+/* ===== PROFILE SECTION ===== */
+.profile-section{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:50px 20px;
+}
+
+.profile-card{
+  width:600px;              /* bigger width */
+  max-width:90%;
+  background:white;
+  color:black;
+  padding:50px;             /* more spacing */
+  border-radius:25px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+
+.profile-card h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.profile-card p{
+  margin:10px 0;
+}
+
+.profile-card input{
+  width:100%;
+  padding:6px;
+  margin-top:5px;
+}
+
+.profile-card button{
+  margin-top:15px;
+  padding:8px 12px;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+.edit-btn{
+  background:#0077b6;
+  color:white;
+}
+
+.save-btn{
+  background:green;
+  color:white;
+  display:none;
+}
+
+.cancel-btn{
+  background:red;
+  color:white;
+  display:none;
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+  <div class="logo">⚡ LT Power Monitoring</div>
+  <nav class="menu">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/map-page">Map</a>
+    <a href="/reports">Reports</a>
+    <a class="active" href="/profile-page">Profile</a>
+  </nav>
+</header>
+
+<section class="profile-section">
+  <div class="profile-card">
+
+    <h2>User Profile</h2>
+
+    <p><strong>Name:</strong>
+      <span id="profileName"></span>
+      <input type="text" id="editName" style="display:none;">
+    </p>
+
+    <p><strong>Email:</strong>
+      <span id="profileEmail"></span>
+      <input type="text" id="editEmail" style="display:none;">
+    </p>
+
+    <p><strong>Phone:</strong>
+      <span id="profilePhone"></span>
+      <input type="text" id="editPhone" style="display:none;">
+    </p>
+
+    <p><strong>Role:</strong>
+      <span id="profileRole"></span>
+    </p>
+    <p><strong>Assigned Streets:</strong></p>
+<ul id="assignedStreetsList" style="margin-top:8px; padding-left:20px;"></ul>
+
+    <button class="edit-btn" onclick="enableEdit()">Edit Profile</button>
+    <button class="save-btn" onclick="saveProfile()">Save</button>
+    <button class="cancel-btn" onclick="cancelEdit()">Cancel</button>
+  <p id="successMsg" style="display:none; color:green; font-weight:bold; margin-top:15px;">
+  Profile Updated Successfully ✅
+  </p>
+  </div>
+</section>
+
+<script>
+
+let originalData = {};
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+  try {
+    const res = await fetch("/profile", {
+      credentials: "include"
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch profile");
+    }
+
+    const data = await res.json();
+    originalData = data;
+
+    // Basic Info
+    document.getElementById("profileName").innerText = data.username || "";
+    document.getElementById("profileEmail").innerText = data.email || "";
+    document.getElementById("profilePhone").innerText = data.phone || "";
+    document.getElementById("profileRole").innerText = data.role || "User";
+
+    // Assigned Streets
+    const streetsList = document.getElementById("assignedStreetsList");
+    streetsList.innerHTML = "";
+
+    if (data.assigned_streets && data.assigned_streets.length > 0) {
+      data.assigned_streets.forEach(street => {
+        const li = document.createElement("li");
+        li.innerText = street;
+        streetsList.appendChild(li);
+      });
+    } else {
+      streetsList.innerHTML = "<li>No streets assigned</li>";
+    }
+
+  } catch (error) {
+    console.error("Profile Load Error:", error);
+    alert("Unable to load profile");
+  }
+});
+
+
+function enableEdit() {
+  document.getElementById("editName").value = originalData.username || "";
+  document.getElementById("editEmail").value = originalData.email || "";
+  document.getElementById("editPhone").value = originalData.phone || "";
+  toggleEditMode(true);
+}
+
+
+function cancelEdit() {
+  toggleEditMode(false);
+}
+
+
+function toggleEditMode(editing) {
+
+  document.getElementById("profileName").style.display = editing ? "none" : "inline";
+  document.getElementById("profileEmail").style.display = editing ? "none" : "inline";
+  document.getElementById("profilePhone").style.display = editing ? "none" : "inline";
+
+  document.getElementById("editName").style.display = editing ? "block" : "none";
+  document.getElementById("editEmail").style.display = editing ? "block" : "none";
+  document.getElementById("editPhone").style.display = editing ? "block" : "none";
+
+  document.querySelector(".edit-btn").style.display = editing ? "none" : "inline-block";
+  document.querySelector(".save-btn").style.display = editing ? "inline-block" : "none";
+  document.querySelector(".cancel-btn").style.display = editing ? "inline-block" : "none";
+}
+
+
+async function saveProfile() {
+
+  const updatedData = {
+    username: document.getElementById("editName").value.trim(),
+    phone: document.getElementById("editPhone").value.trim()
+  };
+
+  try {
+
+    const res = await fetch("/update-profile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify(updatedData)
+    });
+
+    if (!res.ok) {
+      throw new Error("Update failed");
+    }
+
+    const result = await res.json();
+
+    if (result.success) {
+
+      // Update UI instantly
+      document.getElementById("profileName").innerText = updatedData.username;
+      document.getElementById("profilePhone").innerText = updatedData.phone;
+
+      // Save locally
+      localStorage.setItem("username", updatedData.username);
+
+      document.getElementById("successMsg").style.display = "block";
+
+      toggleEditMode(false);
+
+      // Single redirect
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 1200);
+
+    } else {
+      alert(result.error || "Update Failed");
+    }
+
+  } catch (err) {
+    console.error("Update Error:", err);
+    alert("Server Error");
+  }
+}
+
+</script>
+</body>
+</html>
